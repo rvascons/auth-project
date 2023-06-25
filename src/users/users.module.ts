@@ -1,18 +1,11 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { ConfigModule } from '@nestjs/config';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    ConfigModule.forRoot({
-      envFilePath: '.env',
-      isGlobal: true,
-    }),
-  ],
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UsersService],
   controllers: [UsersController],
   exports: [UsersService],
