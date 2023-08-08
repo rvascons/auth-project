@@ -7,13 +7,14 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
-export class UsersService {
+export class UsersRepository {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    console.log('createUserDto', createUserDto);
     const user = {
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
@@ -29,4 +30,16 @@ export class UsersService {
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
+
+  // findOne(id: number) {
+  //   return `This action returns a #${id} user`;
+  // }
+
+  // update(id: number, updateUserDto: UpdateUserDto) {
+  //   return `This action updates a #${id} user`;
+  // }
+
+  // remove(id: number) {
+  //   return `This action removes a #${id} user`;
+  // }
 }
