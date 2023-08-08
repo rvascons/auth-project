@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   HttpCode,
   HttpStatus,
@@ -10,6 +11,8 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/AuthRequest';
 import { IsPublic } from './decorators/is-public.decorator';
+import { Sign } from 'crypto';
+import { SignUpRequestBody } from './models/SignUpRequestBody';
 
 @Controller()
 export class AuthController {
@@ -21,5 +24,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   async login(@Request() req: AuthRequest) {
     return this.authService.login(req.user);
+  }
+
+  @IsPublic()
+  @Post('sign-up')
+  @HttpCode(HttpStatus.CREATED)
+  async register(@Body() req: SignUpRequestBody) {
+    return this.authService.register(req);
   }
 }

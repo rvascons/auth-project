@@ -5,6 +5,7 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { UserPayload } from './models/UserPayload';
 import { UserToken } from './models/UserToken';
+import { SignUpRequestBody } from './models/SignUpRequestBody';
 @Injectable()
 export class AuthService {
   constructor(
@@ -26,6 +27,12 @@ export class AuthService {
     throw new Error('Invalid credentials');
   }
 
+  async checkUser(email: string) {
+    const user = await this.usersService.findOneByEmail(email);
+    console.log(user);
+    return user ? true : false;
+  }
+
   login(user: User): UserToken {
     const payload: UserPayload = {
       sub: user.id,
@@ -38,5 +45,16 @@ export class AuthService {
     return {
       access_token: jwtToken,
     };
+  }
+
+  async register(user: SignUpRequestBody): Promise<string> {
+    const userExists = await this.checkUser(user.email);
+    if (userExists) {
+      return 'User already exists';
+    } else {
+      return this.usersService.create(user).then((user) => {
+        return this.login(user).access_token;
+      });
+    }
   }
 }
