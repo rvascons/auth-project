@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserTrip } from 'src/users-trips/entities/users-trip.entity';
-import { Permissions } from 'src/users-trips/enums/permissions.enum';
+import { Permissions } from 'src/auth/enums/permissions.enum';
 import { User } from 'src/users/entities/user.entity';
 import { DataSource, Repository } from 'typeorm';
 import { CreateTripDto } from './dto/create-trip.dto';
