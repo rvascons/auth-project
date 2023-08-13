@@ -1,21 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { UserTrip } from 'src/users-trips/entities/users-trip.entity';
+import { Permissions } from 'src/users-trips/enums/permissions.enum';
+import { User } from 'src/users/entities/user.entity';
+import { DataSource, Repository } from 'typeorm';
 import { CreateTripDto } from './dto/create-trip.dto';
 import { Trip } from './entities/trip.entity';
-import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class TripsService {
 
   public constructor(
     @InjectRepository(Trip)
-    private tripsRepository: Repository<Trip>, 
+    private tripsRepository: Repository<Trip>,
+    @InjectRepository(UserTrip)
+    private userTripsRepository: Repository<UserTrip>,
+    private dataSource: DataSource,
   ) {}
   
   async createTrip(createTripDto: CreateTripDto, user: User) {
-    console.log("User", user.email, "created a new trip.")
-    return this.tripsRepository.save(createTripDto);
+    const queryRunner = this.dataSource.createQueryRunner()
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const trip = new Trip();
+      trip.destination = createTripDto.destination;
+      const savedTrip = await queryRunner.manager.save(trip);
+
+      const userTrip = new UserTrip();
+      userTrip.user = user;
+      userTrip.trip = savedTrip;
+      userTrip.permission = Permissions.Write;
+      await queryRunner.manager.save(userTrip);
+
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException('Failed to create trip.');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async getTripById(id: number) {

@@ -21,7 +21,7 @@ export class UsersController {
 
   @Get(':email')
   findOneByEmail(@Param('email') email: string) {
-    return this.usersService.getUserByEmail(email);
+    return this.usersService.getUserByEmailAndPopulateUserTrips(email);
   }
 
 }
