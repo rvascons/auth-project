@@ -6,13 +6,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { Trip } from './trips/entities/trip.entity';
+import { TripsModule } from './trips/trips.module';
+import { UserTrip } from './users-trips/entities/users-trip.entity';
 import { User } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
     AuthModule,
-    UsersModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -24,9 +26,11 @@ import { UsersModule } from './users/users.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User],
+      entities: [User, Trip, UserTrip],
       synchronize: true,
     }),
+    UsersModule,
+    TripsModule,
   ],
   controllers: [AppController],
   providers: [

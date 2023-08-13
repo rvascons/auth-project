@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserTrip } from 'src/users-trips/entities/users-trip.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 
 @Entity()
 export class User {
@@ -13,4 +15,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => UserTrip, userTrip => userTrip.user, {
+    cascade: true
+  })
+  userTrips: UserTrip[];
 }

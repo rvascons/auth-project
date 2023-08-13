@@ -1,26 +1,27 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersRepository: UsersRepository) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @IsPublic()
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersRepository.create(createUserDto);
+    return this.usersService.createUser(createUserDto);
   }
 
   @IsPublic()
   @Get()
   findAll() {
-    return this.usersRepository.findAll();
+    return this.usersService.getAllUsers();
   }
 
   @Get(':email')
   findOneByEmail(@Param('email') email: string) {
-    return this.usersRepository.findOneByEmail(email);
+    return this.usersService.getUserByEmail(email);
   }
+
 }

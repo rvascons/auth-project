@@ -2,19 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/entities/user.entity';
-import { UsersRepository } from 'src/users/users.repository';
+import { UsersService } from 'src/users/users.service';
 import { UserPayload } from './models/UserPayload';
 import { UserToken } from './models/UserToken';
 import { SignUpRequestBody } from './models/SignUpRequestBody';
 @Injectable()
 export class AuthService {
   constructor(
-    private usersRepository: UsersRepository,
+    private usersService: UsersService,
     private readonly jwtService: JwtService
   ) {}
 
   async validateUser(email: string, password: string) {
-    const user = await this.usersRepository.findOneByEmail(email);
+    const user = await this.usersService.getUserByEmail(email);
     if (user) {
       const isValidPassword = await bcrypt.compare(password, user.password);
       if (isValidPassword) {
@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   async checkUser(email: string) {
-    const user = await this.usersRepository.findOneByEmail(email);
+    const user = await this.usersService.getUserByEmail(email);
     console.log(user);
     return user ? true : false;
   }
@@ -52,7 +52,7 @@ export class AuthService {
     if (userExists) {
       return 'User already exists';
     } else {
-      return this.usersRepository.create(user).then((user) => {
+      return this.usersService.createUser(user).then((user) => {
         return this.login(user).access_token;
       });
     }
