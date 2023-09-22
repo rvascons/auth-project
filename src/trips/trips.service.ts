@@ -13,8 +13,6 @@ export class TripsService {
   public constructor(
     @InjectRepository(Trip)
     private tripsRepository: Repository<Trip>,
-    @InjectRepository(UserTrip)
-    private userTripsRepository: Repository<UserTrip>,
     private dataSource: DataSource,
   ) {}
   
@@ -31,7 +29,7 @@ export class TripsService {
       const userTrip = new UserTrip();
       userTrip.user = user;
       userTrip.trip = savedTrip;
-      userTrip.permission = Permissions.Write;
+      userTrip.permissions = [ Permissions.WRITE, Permissions.READ, Permissions.DELETE ];
       await queryRunner.manager.save(userTrip);
 
       await queryRunner.commitTransaction();

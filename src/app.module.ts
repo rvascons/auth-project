@@ -6,6 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { Invite } from './invites/entities/invite.entity';
+import { InvitesModule } from './invites/invites.module';
 import { Trip } from './trips/entities/trip.entity';
 import { TripsModule } from './trips/trips.module';
 import { UserTrip } from './users-trips/entities/users-trip.entity';
@@ -26,11 +28,12 @@ import { UsersModule } from './users/users.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      entities: [User, Trip, UserTrip],
+      entities: [User, Trip, UserTrip, Invite],
       synchronize: true,
     }),
     UsersModule,
     TripsModule,
+    InvitesModule,
   ],
   controllers: [AppController],
   providers: [

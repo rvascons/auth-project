@@ -1,3 +1,4 @@
+import { Invite } from 'src/invites/entities/invite.entity';
 import { UserTrip } from 'src/users-trips/entities/users-trip.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -20,4 +21,14 @@ export class User {
     cascade: true
   })
   userTrips: UserTrip[];
+
+  @OneToMany(() => Invite, (invite) => invite.host, {
+    cascade: true
+  })
+  sentInvites: Invite[];
+
+  @OneToMany(() => Invite, (invite) => invite.guest, {
+    cascade: true
+  })
+  receivedInvites: Invite[];
 }

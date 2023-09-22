@@ -23,8 +23,8 @@ export class PermissionGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user; // Assumes you have a user object attached to request after JWT authentication
-    const tripId = request.params.id; // Assumes your trip id is named "id" in route parameters
+    const user = request.user;
+    const tripId = request.params.id;
 
     const userTrip = await this.usersTripsService.findUserTrip(user.id, tripId);
 
@@ -32,7 +32,7 @@ export class PermissionGuard implements CanActivate {
       throw new UnauthorizedException('No relation found between user and trip.');
     }
 
-    if (userTrip.permission !== requiredPermission) {
+    if (!userTrip.permissions.includes(requiredPermission)) {
       throw new UnauthorizedException('User does not have the required permission.');
     }
 

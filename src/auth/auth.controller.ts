@@ -11,7 +11,6 @@ import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthRequest } from './models/AuthRequest';
 import { IsPublic } from './decorators/is-public.decorator';
-import { Sign } from 'crypto';
 import { SignUpRequestBody } from './models/SignUpRequestBody';
 
 @Controller()

@@ -23,7 +23,7 @@ export class TripsController {
 
   @Get(':id')
   @UseGuards(PermissionGuard)
-  @RequirePermission(Permissions.Write)
+  @RequirePermission(Permissions.WRITE)
   findOne(@CurrentUser() user: User,@Param('id') id: number) {
     return this.tripsService.getTripById(id);
   }

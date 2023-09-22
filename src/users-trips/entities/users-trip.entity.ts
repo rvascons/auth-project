@@ -16,7 +16,8 @@ export class UserTrip {
 
   @Column({
     type: "enum",
-    enum: Permissions
+    enum: Permissions,
+    array: true,
   })
-  permission: Permissions;
+  permissions: Permissions[];
 }
